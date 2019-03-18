@@ -8,9 +8,12 @@ module.exports = function(router, Schema) {
             body: req.body.body,
             title: req.body.title
         })
-            .save();
+            .save()
+            .then((result) => {
+                res.send(result);
+            })
         
-        res.send('}{qwe')
+        //res.send('}{qwe')
     });
 
     // route: '/notes/:id'
@@ -20,7 +23,7 @@ module.exports = function(router, Schema) {
         const id = req.params.id;            
         const details = { _id: ObjectID(`${id}`) };
         Schema
-            .findOne()
+            .findOne(details)
             .then((item) => {
                 if (item) {
                     res.send(item);
@@ -44,7 +47,7 @@ module.exports = function(router, Schema) {
             if (err) {
                 res.send(err);
             } else {
-                res.send('Note ' + id + ' deleted!');
+                res.send(`Note ${id} deleted!`);
             } 
         });
     });
@@ -55,7 +58,7 @@ module.exports = function(router, Schema) {
     router.put ('/notes/:id', (req, res) => {
         const id = req.params.id;
         const details = { _id: ObjectID(`${id}`) };
-        const note = { text: req.body.body, title: req.body.title };
+        const note = { body: req.body.body, title: req.body.title };
         Schema.findOneAndUpdate(details, note, (err, result) => {
             if (err) {
                 res.send({'error':'An error has occurred'});
